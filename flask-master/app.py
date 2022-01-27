@@ -65,7 +65,9 @@ def update():
         pg = request.form['pg']
         #conn = mysql.connect()
         cur = conn.cursor(pymysql.cursors.DictCursor)
-        cur.execute("UPDATE studenttable SET name = %s, email = %s, phone = %s, dob = %s, address = %s, ug = %s, pg = %s, #WHERE id = %s ", (name,email,phone,dob,address, ug, pg))
+        cur.execute(
+                    UPDATE studenttable SET name = , email = %s, phone = %s, dob = %s, address = %s, ug = %s, pg = %s, WHERE id = %s
+                    , (name,email,phone,dob,address, ug, pg))
         flash('Info Updated Successfully')
         conn.commit()
         return redirect(url_for('index.html'))
