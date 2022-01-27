@@ -23,11 +23,11 @@ conn = pymysql.connect(
         
 @app.route('/')
 def Index():
-    """ cur = conn.cursor(pymysql.cursors.DictCursor)
+    cur = conn.cursor(pymysql.cursors.DictCursor)
     cur.execute('SELECT * FROM studenttable')
     data = cur.fetchall()
-    cur.close() """
-    return render_template('index.html')
+    cur.close()
+    return render_template('index.html', students = data)
 
 
 @app.route('/insert', methods=['POST'])
