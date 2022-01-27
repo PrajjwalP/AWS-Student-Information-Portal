@@ -42,7 +42,7 @@ def insert():
         address = request.form['address']
         ug = request.form['ug']
         pg = request.form['pg']
-        cur.execute("INSERT INTO table (name,email,phone,dob,address,ug,pg) VALUES (%s,%s,%s,%s,%s,%s,%s)", (name,email,phone,dob,address,ug,pg))
+        cur.execute("INSERT INTO table (name,email,phone,dob,address,ug,pg) VALUES (%s,%s,%s,%s,%s,%s,%s)" % (name,email,phone,dob,address,ug,pg))
         conn.commit()
         flash('Information Added successfully')
         return redirect(url_for('index.html'))
