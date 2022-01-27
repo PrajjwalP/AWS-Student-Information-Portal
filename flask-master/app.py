@@ -24,7 +24,7 @@ conn = pymysql.connect(
 @app.route('/')
 def Index():
     """ cur = conn.cursor(pymysql.cursors.DictCursor)
-    cur.execute('SELECT * FROM table')
+    cur.execute('SELECT * FROM studenttable')
     data = cur.fetchall()
     cur.close() """
     return render_template('index.html')
@@ -42,7 +42,7 @@ def insert():
         address = request.form['address']
         ug = request.form['ug']
         pg = request.form['pg']
-        cur.execute("INSERT INTO table (name,email,phone,dob,address,ug,pg) VALUES (%s,%s,%s,%s,%s,%s,%s)" % (name,email,phone,dob,address,ug,pg))
+        cur.execute("INSERT INTO studenttable (name,email,phone,dob,address,ug,pg) VALUES (%s,%s,%s,%s,%s,%s,%s)", (name,email,phone,dob,address,ug,pg))
         conn.commit()
         flash('Information Added successfully')
         return redirect(url_for('index.html'))
@@ -61,7 +61,7 @@ def update(id):
         #conn = mysql.connect()
         cur = conn.cursor(pymysql.cursors.DictCursor)
         cur.execute("""
-            UPDATE table
+            UPDATE studenttable
             SET name = %s,
                 email = %s,
                 phone = %s,
@@ -80,7 +80,7 @@ def delete(id):
     #conn = mysql.connect()
     cur = conn.cursor(pymysql.cursors.DictCursor)
   
-    cur.execute('DELETE FROM table WHERE id = {0}'.format(id))
+    cur.execute('DELETE FROM studenttable WHERE id = {0}'.format(id))
     conn.commit()
     flash('Info Removed Successfully')
     return redirect(url_for('index.html'))
