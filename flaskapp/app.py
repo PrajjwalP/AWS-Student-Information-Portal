@@ -18,7 +18,7 @@ conn = pymysql.connect(
         )
 @app.route('/')
 def Index():
-    return render_template('home2.html')
+    return render_template('index.html')
 
 @app.route('/Index1')
 def Index1():
