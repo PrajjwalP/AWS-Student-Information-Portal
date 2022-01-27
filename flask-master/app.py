@@ -23,7 +23,7 @@ def Index():
     data = cur.fetchall()
   
     cur.close()
-    return render_template('index', registration = data)
+    return render_template('index.html', registration = data)
 
 
 @app.route('/add_registration', methods=['POST'])
