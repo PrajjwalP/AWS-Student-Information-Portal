@@ -1,14 +1,19 @@
 from html.entities import html5
-from pyexpat import model
+import MySQLdb
 from flask import Flask, render_template, request, redirect, url_for, flash
-from flaskext.mysql import MySQL
+import flask
+from flask_sqlalchemy import SQLAlchemy
 import pymysql
+import mysql
+from flaskext.mysql import MySQL
+
+
 
 app = Flask(__name__)
 app.secret_key = "Secret Key"
-  
-mysql = MySQL()
 
+#mysql
+db = MySQL()
 import aws_credentials as rds  
 # MySQL configurations
 conn = pymysql.connect(
@@ -17,25 +22,46 @@ conn = pymysql.connect(
         user = rds.user, # admin
         password = rds.password, #adminadmin
         db = rds.db, #test
-        
-        )
 
-        
+)
+
+
+#Creating model table for our database
+class Data(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    name = db.Column(db.String(100))
+    email = db.Column(db.String(100))
+    phone = db.Column(db.String(100))
+    dob = db.Column(db.DateTime)
+    address = db.Column(db.String(100))
+    ug = db.Column(db.String(100))
+    pg = db.Column(db.String(100))
+
+    def __init__(self, name, email, phone, dob, address, ug, pg):
+
+        self.name = name
+        self.email = email
+        self.phone = phone
+        self.dob = dob
+        self.address = address
+        self.ug = ug
+        self.pg = pg
+
+
+#This is the index route where we are going to query on all the student data
 @app.route('/')
 def Index():
-    cur = conn.cursor(pymysql.cursors.DictCursor)
-    cur.execute('SELECT * FROM studenttable')
-    data = cur.fetchall()
-    cur.close()
-    return render_template('index.html', students = data)
+    all_data = Data.query.all()
+    
+    return render_template("index.html", students = all_data)
 
 
-@app.route('/insert', methods=['POST'])
+#this route is for inserting data to mysql database via html forms
+@app.route('/insert', methods = ['POST'])
 def insert():
-    #conn = mysql.connect()
-    cur = conn.cursor(pymysql.cursors.DictCursor)
+
     if request.method == 'POST':
-        
+
         name = request.form['name']
         email = request.form['email']
         phone = request.form['phone']
@@ -43,41 +69,55 @@ def insert():
         address = request.form['address']
         ug = request.form['ug']
         pg = request.form['pg']
-        cur.execute("INSERT INTO studenttable (name,email,phone,dob,address,ug,pg) VALUES (%s,%s,%s,%s,%s,%s,%s)", (name,email,phone,dob,address,ug,pg))
-        conn.commit()
-        flash('Information Added successfully')
+
+
+        my_data = Data(name, email, phone, dob, address, ug, pg)
+        db.session.add(my_data)
+        db.session.commit()
+
+        flash("Student Inserted Successfully")
+
         return redirect(url_for('Index'))
 
- 
-@app.route('/update', methods=['POST'])
+
+#this is our update route where we are going to update student details
+@app.route('/update', methods = ['GET', 'POST'])
 def update():
-    if request.method == 'POST':
-        #id = query.get(request.form.get('id'))
 
-        name = request.form['name']
-        email = request.form['email']
-        phone = request.form['phone']
-        dob = request.form['dob']
-        address = request.form['address']
-        ug = request.form['ug']
-        pg = request.form['pg']
-        #conn = mysql.connect()
-        cur = conn.cursor(pymysql.cursors.DictCursor)
-        cur.execute("UPDATE studenttable SET name = %s, email = %s, phone = %s, dob = %s, address = %s, ug = %s, pg = %s, #WHERE id = %s ", (name,email,phone,dob,address, ug, pg))
-        flash('Info Updated Successfully')
-        conn.commit()
+    if request.method == 'POST':
+        my_data = Data.query.get(request.form.get('id'))
+
+        my_data.name = request.form['name']
+        my_data.email = request.form['email']
+        my_data.phone = request.form['phone']
+        my_data.dob = request.form['dob']
+        my_data.address = request.form['address']
+        my_data.ug = request.form['ug']
+        my_data.pg = request.form['pg']
+
+        db.session.commit()
+        flash("Student Updated Successfully")
+
         return redirect(url_for('Index'))
- 
-@app.route('/delete', methods = ['POST','GET'])
-def delete():
-    #conn = mysql.connect()
-    cur = conn.cursor(pymysql.cursors.DictCursor)
-  
-    cur.execute('DELETE FROM studenttable WHERE id = {0}'.format(id))
-    conn.commit()
-    flash('Info Removed Successfully')
-    return redirect(url_for('Index'))
- 
-# starting the app
+
+
+
+
+#This route is for deleting student
+@app.route('/delete/<id>/', methods = ['GET', 'POST'])
+def delete(id):
+    my_data = Data.query.get(id)
+    db.session.delete(my_data)
+    db.session.commit()
+    flash("Student Record Has Been Deleted Successfully")
+
+    return redirect(url_for('index.html'))
+
+
+
+
+
+
+
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=8000, debug=True)
+    app.run(debug=True)
