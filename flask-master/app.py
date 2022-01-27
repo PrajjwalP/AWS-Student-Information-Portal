@@ -23,7 +23,7 @@ def Index():
     data = cur.fetchall()
   
     cur.close()
-    return render_template('index.html', registration = data)
+    return render_template('Index', registration = data)
 """
 @app.route('/Index1')
 def Index1():
@@ -60,7 +60,7 @@ def add_registration():
         cur.execute("INSERT INTO registration (name,gender,rollno,email,address,phone,course,sem) VALUES (%s,%s,%s,%s,%s,%s,%s,%s)", (name,gender,rollno,email,address,phone,course,sem))
         conn.commit()
         flash('Information Added successfully')
-        return redirect(url_for('index.html'))
+        return redirect(url_for('Index'))
 
  
 @app.route('/update/<id>', methods=['POST'])
@@ -90,7 +90,7 @@ def update_registration(id):
         """, (name,gender,rollno,email,address,phone,course,sem,id))
         flash('Info Updated Successfully')
         conn.commit()
-        return redirect(url_for('index.html'))
+        return redirect(url_for('Index'))
  
 @app.route('/delete/<string:id>', methods = ['POST','GET'])
 def delete_registration(id):
@@ -100,7 +100,7 @@ def delete_registration(id):
     cur.execute('DELETE FROM registration WHERE id = {0}'.format(id))
     conn.commit()
     flash('Info Removed Successfully')
-    return redirect(url_for('index.html'))
+    return redirect(url_for('Index'))
  
 # starting the app
 if __name__ == "__main__":
