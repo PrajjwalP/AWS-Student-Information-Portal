@@ -3,12 +3,12 @@ from pyexpat import model
 from flask import Flask, render_template, request, redirect, url_for, flash
 from flaskext.mysql import MySQL
 import pymysql
+import sqlalchemy
 
 app = Flask(__name__)
 app.secret_key = "Secret Key"
   
 mysql = MySQL()
-
 import aws_credentials as rds  
 
 
@@ -24,7 +24,7 @@ conn = pymysql.connect(
 
         
 @app.route('/')
-def Index1():
+def Index():
     cur = conn.cursor(pymysql.cursors.DictCursor)
     cur.execute('SELECT * FROM studenttable')
     data = cur.fetchall()
@@ -37,7 +37,8 @@ def insert():
     #conn = mysql.connect()
     cur = conn.cursor(pymysql.cursors.DictCursor)
     if request.method == 'POST':
-        
+        id = request.form['id']
+
         name = request.form['name']
         email = request.form['email']
         phone = request.form['phone']
@@ -45,16 +46,18 @@ def insert():
         address = request.form['address']
         ug = request.form['ug']
         pg = request.form['pg']
-        cur.execute("INSERT INTO studenttable (name,email,phone,dob,address,ug,pg) VALUES (%s,%s,%s,%s,%s,%s,%s)", (name,email,phone,dob,address,ug,pg))
+        cur.execute("INSERT INTO studenttable (id,name,email,phone,dob,address,ug,pg) VALUES (%s,%s,%s,%s,%s,%s,%s,%s)", (id,name,email,phone,dob,address,ug,pg))
         conn.commit()
         flash('Information Added successfully')
         return redirect(url_for('Index'))
 
  
+
+
 @app.route('/update', methods=['POST'])
-def update():
+def update(id):
     if request.method == 'POST':
-        #id = query.get(request.form.get('id'))
+        numid = request.form['id']
 
         name = request.form['name']
         email = request.form['email']
@@ -65,22 +68,26 @@ def update():
         pg = request.form['pg']
         #conn = mysql.connect()
         cur = conn.cursor(pymysql.cursors.DictCursor)
-        cur.execute(
-                    UPDATE studenttable SET name = , email = %s, phone = %s, dob = %s, address = %s, ug = %s, pg = %s, WHERE id = %s
-                    , (name,email,phone,dob,address, ug, pg))
+        cur.execute("""
+        UPDATE studenttable 
+        SET name = %s, email = %s, phone = %s, dob = %s, 
+        address = %s, ug = %s, pg = %s, WHERE id = %s 
+        """, (name,email,phone,dob,address, ug, pg, numid))
         flash('Info Updated Successfully')
         conn.commit()
-        return redirect(url_for('index.html'))
+        return redirect(url_for('Index'))
  
-@app.route('/delete', methods = ['POST','GET'])
+
+@app.route('/delete', methods = ['GET', 'POST'])
 def delete():
     #conn = mysql.connect()
+    numid = request.form['id']
+
     cur = conn.cursor(pymysql.cursors.DictCursor)
-  
-    cur.execute('DELETE FROM studenttable WHERE id = {0}'.format(id))
+    cur.execute('DELETE FROM studenttable WHERE id = {0}'.format(numid))
     conn.commit()
     flash('Info Removed Successfully')
-    return redirect(url_for('index.html'))
+    return redirect(url_for('Index'))
  
 # starting the app
 if __name__ == "__main__":
