@@ -22,11 +22,8 @@ conn = pymysql.connect(
         
         )
 
-@app.route('/')
-def Index():
-    return render_template('index.html')
         
-@app.route('/index1')
+@app.route('/')
 def Index1():
     cur = conn.cursor(pymysql.cursors.DictCursor)
     cur.execute('SELECT * FROM studenttable')
@@ -71,7 +68,7 @@ def update():
         cur.execute("UPDATE studenttable SET name = %s, email = %s, phone = %s, dob = %s, address = %s, ug = %s, pg = %s, #WHERE id = %s ", (name,email,phone,dob,address, ug, pg))
         flash('Info Updated Successfully')
         conn.commit()
-        return redirect(url_for('Index'))
+        return redirect(url_for('index.html'))
  
 @app.route('/delete', methods = ['POST','GET'])
 def delete():
@@ -81,7 +78,7 @@ def delete():
     cur.execute('DELETE FROM studenttable WHERE id = {0}'.format(id))
     conn.commit()
     flash('Info Removed Successfully')
-    return redirect(url_for('Index'))
+    return redirect(url_for('index.html'))
  
 # starting the app
 if __name__ == "__main__":
