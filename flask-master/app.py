@@ -1,11 +1,14 @@
+from html.entities import html5
+from pyexpat import model
 from flask import Flask, render_template, request, redirect, url_for, flash
 from flaskext.mysql import MySQL
 import pymysql
 
 app = Flask(__name__)
-app.secret_key = "Cairocoders-Ednalan"
+app.secret_key = "Secret Key"
   
 mysql = MySQL()
+
 import aws_credentials as rds  
 # MySQL configurations
 conn = pymysql.connect(
@@ -16,70 +19,61 @@ conn = pymysql.connect(
         db = rds.db, #test
         
         )
+
+        
 @app.route('/')
 def Index():
     cur = conn.cursor(pymysql.cursors.DictCursor)
-    cur.execute('SELECT * FROM registration')
+    cur.execute('SELECT * FROM studenttable')
     data = cur.fetchall()
-  
     cur.close()
-    return render_template('index.html', registration = data)
+    return render_template('index.html', students = data)
 
 
-@app.route('/add_registration', methods=['POST'])
-def add_registration():
+@app.route('/insert', methods=['POST'])
+def insert():
     #conn = mysql.connect()
     cur = conn.cursor(pymysql.cursors.DictCursor)
     if request.method == 'POST':
+        
         name = request.form['name']
-        gender = request.form['optradio']
-        rollno = request.form['rollno']
-        email = request.form['email'] 
-        address = request.form['address']
+        email = request.form['email']
         phone = request.form['phone']
-        course = request.form['course']
-        sem = request.form['sem']
-        cur.execute("INSERT INTO registration (name,gender,rollno,email,address,phone,course,sem) VALUES (%s,%s,%s,%s,%s,%s,%s,%s)", (name,gender,rollno,email,address,phone,course,sem))
+        dob = request.form['dob']
+        address = request.form['address']
+        ug = request.form['ug']
+        pg = request.form['pg']
+        cur.execute("INSERT INTO studenttable (name,email,phone,dob,address,ug,pg) VALUES (%s,%s,%s,%s,%s,%s,%s)", (name,email,phone,dob,address,ug,pg))
         conn.commit()
         flash('Information Added successfully')
         return redirect(url_for('Index'))
 
  
-@app.route('/update/<id>', methods=['POST'])
-def update_registration(id):
+@app.route('/update', methods=['POST'])
+def update():
     if request.method == 'POST':
+        #id = query.get(request.form.get('id'))
+
         name = request.form['name']
-        gender = request.form['optradio']
-        rollno = request.form['rollno']
-        email = request.form['email'] 
-        address = request.form['address']
+        email = request.form['email']
         phone = request.form['phone']
-        course = request.form['course']
-        sem = request.form['sem']
+        dob = request.form['dob']
+        address = request.form['address']
+        ug = request.form['ug']
+        pg = request.form['pg']
         #conn = mysql.connect()
         cur = conn.cursor(pymysql.cursors.DictCursor)
-        cur.execute("""
-            UPDATE registration
-            SET name = %s,
-                gender = %s,
-                rollno = %s,
-                email = %s,
-                address = %s,
-                phone = %s,
-                course = %s,
-                sem = %s
-            WHERE id = %s
-        """, (name,gender,rollno,email,address,phone,course,sem,id))
+        cur.execute("UPDATE studenttable SET name = %s, email = %s, phone = %s, dob = %s, address = %s, ug = %s, pg = %s, #WHERE id = %s ", (name,email,phone,dob,address, ug, pg))
         flash('Info Updated Successfully')
         conn.commit()
         return redirect(url_for('Index'))
  
-@app.route('/delete/<string:id>', methods = ['POST','GET'])
-def delete_registration(id):
+@app.route('/delete', methods = ['POST','GET'])
+def delete():
     #conn = mysql.connect()
     cur = conn.cursor(pymysql.cursors.DictCursor)
   
-    cur.execute('DELETE FROM registration WHERE id = {0}'.format(id))
+    cur.execute('DELETE FROM studenttable WHERE id = {0}'.format(id))
     conn.commit()
     flash('Info Removed Successfully')
     return redirect(url_for('Index'))
