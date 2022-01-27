@@ -35,6 +35,7 @@ def insert():
     #conn = mysql.connect()
     cur = conn.cursor(pymysql.cursors.DictCursor)
     if request.method == 'POST':
+        
         name = request.form['name']
         email = request.form['email']
         phone = request.form['phone']
@@ -48,9 +49,11 @@ def insert():
         return redirect(url_for('Index'))
 
  
-@app.route('/update/<id>', methods=['POST'])
-def update(id):
+@app.route('/update', methods=['POST'])
+def update():
     if request.method == 'POST':
+        #id = query.get(request.form.get('id'))
+
         name = request.form['name']
         email = request.form['email']
         phone = request.form['phone']
@@ -60,23 +63,13 @@ def update(id):
         pg = request.form['pg']
         #conn = mysql.connect()
         cur = conn.cursor(pymysql.cursors.DictCursor)
-        cur.execute("""
-            UPDATE studenttable
-            SET name = %s,
-                email = %s,
-                phone = %s,
-                dob = %s,
-                address = %s,
-                ug = %s,
-                pg = %s,
-            WHERE id = %s
-        """, (name,email,phone,dob,address, ug, pg))
+        cur.execute("UPDATE studenttable SET name = %s, email = %s, phone = %s, dob = %s, address = %s, ug = %s, pg = %s, #WHERE id = %s ", (name,email,phone,dob,address, ug, pg))
         flash('Info Updated Successfully')
         conn.commit()
         return redirect(url_for('Index'))
  
-@app.route('/delete/<string:id>', methods = ['POST','GET'])
-def delete(id):
+@app.route('/delete', methods = ['POST','GET'])
+def delete():
     #conn = mysql.connect()
     cur = conn.cursor(pymysql.cursors.DictCursor)
   
