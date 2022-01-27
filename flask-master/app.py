@@ -18,8 +18,13 @@ conn = pymysql.connect(
         )
 @app.route('/')
 def Index():
-    return render_template('index.html')
-
+    cur = conn.cursor(pymysql.cursors.DictCursor)
+    cur.execute('SELECT * FROM registration')
+    data = cur.fetchall()
+  
+    cur.close()
+    return render_template('index.html', registration = data)
+"""
 @app.route('/Index1')
 def Index1():
     # conn = mysql.connect()
@@ -38,7 +43,7 @@ def Index2():
     data = cur.fetchall()
     cur.close()
     return render_template('index.html',registration = data)
-
+"""
 @app.route('/add_registration', methods=['POST'])
 def add_registration():
     #conn = mysql.connect()
@@ -92,7 +97,7 @@ def delete_registration(id):
     #conn = mysql.connect()
     cur = conn.cursor(pymysql.cursors.DictCursor)
   
-    cur.execute('DELETE FROM studenttable WHERE id = {0}'.format(id))
+    cur.execute('DELETE FROM registration WHERE id = {0}'.format(id))
     conn.commit()
     flash('Info Removed Successfully')
     return redirect(url_for('index.html'))
