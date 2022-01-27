@@ -10,6 +10,8 @@ app.secret_key = "Secret Key"
 mysql = MySQL()
 
 import aws_credentials as rds  
+
+
 # MySQL configurations
 conn = pymysql.connect(
         host= rds.host, #endpoint link
@@ -20,9 +22,12 @@ conn = pymysql.connect(
         
         )
 
-        
 @app.route('/')
 def Index():
+    return render_template('index.html')
+        
+@app.route('/index1')
+def Index1():
     cur = conn.cursor(pymysql.cursors.DictCursor)
     cur.execute('SELECT * FROM studenttable')
     data = cur.fetchall()
