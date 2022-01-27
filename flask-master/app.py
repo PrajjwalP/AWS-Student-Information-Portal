@@ -45,7 +45,7 @@ def insert():
         cur.execute("INSERT INTO studenttable (name,email,phone,dob,address,ug,pg) VALUES (%s,%s,%s,%s,%s,%s,%s)", (name,email,phone,dob,address,ug,pg))
         conn.commit()
         flash('Information Added successfully')
-        return redirect(url_for('index.html'))
+        return redirect(url_for('Index'))
 
  
 @app.route('/update/<id>', methods=['POST'])
@@ -73,7 +73,7 @@ def update(id):
         """, (name,email,phone,dob,address, ug, pg))
         flash('Info Updated Successfully')
         conn.commit()
-        return redirect(url_for('index.html'))
+        return redirect(url_for('Index'))
  
 @app.route('/delete/<string:id>', methods = ['POST','GET'])
 def delete(id):
@@ -83,7 +83,7 @@ def delete(id):
     cur.execute('DELETE FROM studenttable WHERE id = {0}'.format(id))
     conn.commit()
     flash('Info Removed Successfully')
-    return redirect(url_for('index.html'))
+    return redirect(url_for('Index'))
  
 # starting the app
 if __name__ == "__main__":
