@@ -9,11 +9,22 @@ from flask_sqlalchemy import SQLAlchemy
 app = Flask(__name__)
 app.secret_key = "Secret Key"
 
-#SqlAlchemy Database Configuration With Mysql
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:admin@localhost/student'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+#mysql
+mysql = MySQL()
+import aws_credentials as rds  
+# MySQL configurations
+conn = pymysql.connect(
+        host= rds.host, #endpoint link
+        port = rds.port, # 3306
+        user = rds.user, # admin
+        password = rds.password, #adminadmin
+        db = rds.db, #test
 
-db = SQLAlchemy(app)
+#SqlAlchemy Database Configuration With Mysql
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:admin@localhost/student'
+#app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+#db = SQLAlchemy(app)
 
 
 #Creating model table for our database
@@ -122,9 +133,6 @@ def search():
 
 
 
-
-
-
     """ my_data = Data.query.get(request.form.get('name'))
     search_name = request.form['name']
     if search_name == my_data:
@@ -132,16 +140,6 @@ def search():
     else:
         flash("No Student Record Found By This Name")
     return redirect(url_for('Index')) """
-
-
-	
-
-
-
-
-
-
-
 
 
 
