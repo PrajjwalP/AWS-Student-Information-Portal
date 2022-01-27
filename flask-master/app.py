@@ -36,13 +36,13 @@ def insert():
     cur = conn.cursor(pymysql.cursors.DictCursor)
     if request.method == 'POST':
         name = request.form['name']
-        emailid = request.form['email']
+        email = request.form['email']
         phone = request.form['phone']
         dob = request.form['dob']
         address = request.form['address']
         ug = request.form['ug']
         pg = request.form['pg']
-        cur.execute("INSERT INTO table (name,emailid,phone,dob,address, ug, pg) VALUES (%s,%s,%s,%s,%s,%s,%s)", (name,emailid,phone,dob,address, ug, pg))
+        cur.execute("INSERT INTO table (name,email,phone,dob,address,ug,pg) VALUES (%s,%s,%s,%s,%s,%s,%s)", (name,email,phone,dob,address,ug,pg))
         conn.commit()
         flash('Information Added successfully')
         return redirect(url_for('index.html'))
@@ -52,7 +52,7 @@ def insert():
 def update(id):
     if request.method == 'POST':
         name = request.form['name']
-        emailid = request.form['email']
+        email = request.form['email']
         phone = request.form['phone']
         dob = request.form['dob']
         address = request.form['address']
@@ -63,14 +63,14 @@ def update(id):
         cur.execute("""
             UPDATE table
             SET name = %s,
-                emailid = %s,
+                email = %s,
                 phone = %s,
                 dob = %s,
                 address = %s,
                 ug = %s,
                 pg = %s,
             WHERE id = %s
-        """, (name,emailid,phone,dob,address, ug, pg,id))
+        """, (name,email,phone,dob,address, ug, pg))
         flash('Info Updated Successfully')
         conn.commit()
         return redirect(url_for('index.html'))
