@@ -23,27 +23,9 @@ def Index():
     data = cur.fetchall()
   
     cur.close()
-    return render_template('Index', registration = data)
-"""
-@app.route('/Index1')
-def Index1():
-    # conn = mysql.connect()
-    cur = conn.cursor(pymysql.cursors.DictCursor)
-    cur.execute('SELECT * FROM registration')
-    data = cur.fetchall()
-  
-    cur.close()
-    return render_template('index.html', registration = data)
+    return render_template('index', registration = data)
 
-@app.route('/Index2')
-def Index2():
-   # conn = mysql.connect()
-    cur = conn.cursor(pymysql.cursors.DictCursor)
-    cur.execute('SELECT * FROM registration')
-    data = cur.fetchall()
-    cur.close()
-    return render_template('index.html',registration = data)
-"""
+
 @app.route('/add_registration', methods=['POST'])
 def add_registration():
     #conn = mysql.connect()
