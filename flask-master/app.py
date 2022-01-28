@@ -78,12 +78,12 @@ def update(id):
  
 
 @app.route('/delete', methods = ['GET', 'POST'])
-def delete():
+def delete(id):
     #conn = mysql.connect()
-    numid = request.form['id']
+    id = request.form['id']
 
     cur = conn.cursor(pymysql.cursors.DictCursor)
-    cur.execute('DELETE FROM studenttable WHERE id = {0}'.format(numid))
+    cur.execute('DELETE FROM studenttable WHERE id = {0}'.format(id))
     conn.commit()
     flash('Info Removed Successfully')
     return redirect(url_for('Index'))
