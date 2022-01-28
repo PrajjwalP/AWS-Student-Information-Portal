@@ -70,8 +70,8 @@ def update():
         cur.execute("""
         UPDATE studenttable 
         SET name = %s, email = %s, phone = %s, dob = %s, 
-        address = %s, ug = %s, pg = %s, WHERE id = numid 
-        """, (name,email,phone,dob,address,ug,pg))
+        address = %s, ug = %s, pg = %s, WHERE id = %d
+        """, (name,email,phone,dob,address,ug,pg, numid))
         flash('Info Updated Successfully')
         conn.commit()
         return redirect(url_for('Index'))
