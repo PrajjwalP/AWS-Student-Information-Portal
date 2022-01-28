@@ -51,6 +51,7 @@ def insert():
         flash('Information Added successfully')
         return redirect(url_for('Index'))
 
+ 
 
 
 @app.route('/update/<int:id>', methods=['POST'])
@@ -75,7 +76,7 @@ def update(id):
         flash('Info Updated Successfully')
         conn.commit()
         #return redirect(url_for('Index'))
-        return render_template('index.html')
+ 
 
 @app.route('/delete/<int:id>', methods = ['GET', 'POST'])
 def delete(id):
@@ -88,6 +89,7 @@ def delete(id):
     flash('Info Removed Successfully')
     #return redirect(url_for('Index'))
     return render_template('index.html')
+    Index(id)
  
 # starting the app
 if __name__ == "__main__":
