@@ -38,6 +38,7 @@ def insert():
     cur = conn.cursor(pymysql.cursors.DictCursor)
     if request.method == 'POST':
         id = request.form['id']
+
         name = request.form['name']
         email = request.form['email']
         phone = request.form['phone']
@@ -53,10 +54,10 @@ def insert():
  
 
 
-@app.route('/update', methods=['POST'])
-def update():
+@app.route('/update/<int:id>', methods=['POST'])
+def update(id):
     if request.method == 'POST':
-        numid = request.form['id']
+        #numid = request.form['id']
 
         name = request.form['name']
         email = request.form['email']
@@ -70,24 +71,23 @@ def update():
         cur.execute("""
         UPDATE studenttable 
         SET name = %s, email = %s, phone = %s, dob = %s, 
-        address = %s, ug = %s, pg = %s, WHERE id = %d
-        """, (name,email,phone,dob,address,ug,pg, numid))
+        address = %s, ug = %s, pg = %s, WHERE id = %s 
+        """, (name,email,phone,dob,address, ug, pg, id))
         flash('Info Updated Successfully')
         conn.commit()
         return redirect(url_for('Index'))
  
 
-@app.route('/delete', methods = ['GET', 'POST'])
+@app.route('/delete/<int:id>', methods = ['GET', 'POST'])
 def delete(id):
     #conn = mysql.connect()
-    id = request.form['id']
+    #numid = request.form['id']
 
     cur = conn.cursor(pymysql.cursors.DictCursor)
     cur.execute('DELETE FROM studenttable WHERE id = {0}'.format(id))
     conn.commit()
     flash('Info Removed Successfully')
-    #return redirect(url_for('Index'))
-    return render_template('index.html')
+    return redirect(url_for('Index'))
  
 # starting the app
 if __name__ == "__main__":
