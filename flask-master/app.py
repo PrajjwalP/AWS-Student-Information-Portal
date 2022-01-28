@@ -38,7 +38,6 @@ def insert():
     cur = conn.cursor(pymysql.cursors.DictCursor)
     if request.method == 'POST':
         id = request.form['id']
-
         name = request.form['name']
         email = request.form['email']
         phone = request.form['phone']
