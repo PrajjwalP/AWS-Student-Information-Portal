@@ -87,7 +87,7 @@ def delete(id):
     cur.execute('DELETE FROM studenttable WHERE id = {0}'.format(id))
     conn.commit()
     flash('Info Removed Successfully')
-    return redirect(url_for('/'))
+    return redirect(url_for('Index'))
     #return render_template('index.html')
  
 # starting the app
